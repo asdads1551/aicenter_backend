@@ -13,10 +13,16 @@ export class AppController {
   @Get('/hello')
   getProduct() {
     return {
-      data: [{
-        id: 1,
-        name: 'product name'
-      }]
-    }
+      data: [
+        {
+          id: 1,
+          name: 'product name',
+        },
+        {
+          id: 2,
+          name: 'product name - foo',
+        },
+      ],
+    };
   }
 }
