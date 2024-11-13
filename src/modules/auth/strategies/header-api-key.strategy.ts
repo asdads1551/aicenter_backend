@@ -9,7 +9,7 @@ export class HeaderApiKeyStrategy extends PassportStrategy(
   'api-key',
 ) {
   constructor(private readonly configService: ConfigService) {
-    super({ header: 'X-API-KEY', prefix: '' }, true, async (apiKey, done) => {
+    super({ header: 'x-api-key', prefix: '' }, true, async (apiKey, done) => {
       return this.validate(apiKey, done);
     });
   }

@@ -14,10 +14,11 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { isNil } from 'lodash';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 
+@ApiSecurity('api-key')
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

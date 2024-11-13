@@ -14,10 +14,11 @@ import { ToolService } from './tool.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
 import { isNil } from 'lodash';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 
+@ApiSecurity('api-key')
 @Controller('tool')
 export class ToolController {
   constructor(private readonly toolService: ToolService) {}
