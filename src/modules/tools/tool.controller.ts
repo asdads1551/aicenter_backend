@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ToolService } from './tool.service';
 import { CreateToolDto } from './dto/create-tool.dto';
@@ -15,6 +16,7 @@ import { UpdateToolDto } from './dto/update-tool.dto';
 import { isNil } from 'lodash';
 import { ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('tool')
 export class ToolController {
@@ -43,6 +45,7 @@ export class ToolController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('api-key'))
   async createTool(@Body() createToolDto: CreateToolDto) {
     return this.toolService.create(createToolDto);
   }
@@ -52,6 +55,7 @@ export class ToolController {
     required: true,
     type: String,
   })
+  @UseGuards(AuthGuard('api-key'))
   @Patch('/:id')
   async updateTool(
     @Param('id') id: string,
@@ -75,6 +79,7 @@ export class ToolController {
     required: true,
     type: String,
   })
+  @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')
   async deleteTool(@Param('id') id: string) {
     if (!isValidObjectId(id)) {

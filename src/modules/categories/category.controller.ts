@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -15,6 +16,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { isNil } from 'lodash';
 import { ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('category')
 export class CategoryController {
@@ -43,8 +45,16 @@ export class CategoryController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('api-key'))
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
+    try {
+      return await this.categoryService.create(createCategoryDto);
+    } catch (e) {
+      if (e?.code == 11000) {
+        throw new BadRequestException('The name is already in use');
+      }
+      throw e;
+    }
   }
 
   @ApiParam({
@@ -53,6 +63,7 @@ export class CategoryController {
     type: String,
   })
   @Patch('/:id')
+  @UseGuards(AuthGuard('api-key'))
   async updateCategory(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -79,6 +90,7 @@ export class CategoryController {
     type: String,
   })
   @Delete('/:id')
+  @UseGuards(AuthGuard('api-key'))
   async deleteCategory(@Param('id') id: string) {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool id');

@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './category.schema';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { BadRequestError } from 'passport-headerapikey';
 
 @Injectable()
 export class CategoryService {
