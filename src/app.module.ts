@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ToolModule } from './modules/tools/tool.module';
 import { CategoryModule } from './modules/categories/category.module';
 import { ToolLikeModule } from './modules/toolLikes/tool-like.module';
+import { UserModule } from './modules/users/user.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ToolLikeModule } from './modules/toolLikes/tool-like.module';
     CategoryModule,
     ToolModule,
     ToolLikeModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -16,5 +16,6 @@ import { ToolModule } from '../tools/tool.module';
   ],
   controllers: [ToolLikeController],
   providers: [ToolLikeService],
+  exports: [ToolLikeService],
 })
 export class ToolLikeModule {}

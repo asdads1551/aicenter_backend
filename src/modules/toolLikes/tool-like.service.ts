@@ -45,4 +45,26 @@ export class ToolLikeService {
     }
     return result.deletedCount === 1;
   }
+
+  async findUserOne(userId: string, id: string): Promise<ToolLike | null> {
+    return this.toolLikeModel.findOne({ _id: id, userId }).exec();
+  }
+
+  async findUserAll(userId: string): Promise<ToolLike[]> {
+    return this.toolLikeModel.find({ userId }).exec();
+  }
+
+  async deleteUserOne(userId: string, id: string): Promise<boolean> {
+    const toolLike = await this.findUserOne(userId, id);
+    if (isNil(toolLike)) {
+      return false;
+    }
+    const result = await this.toolLikeModel.deleteOne({ userId, _id: id });
+    try {
+      await this.toolService.adjustLikes(toolLike.toolId, -1);
+    } catch (e) {
+      console.error(e);
+    }
+    return result.deletedCount === 1;
+  }
 }
