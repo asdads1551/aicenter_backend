@@ -34,7 +34,7 @@ export class CategoryController {
     type: String,
   })
   @Get('/:id')
-  async findTookById(@Param('id') id: string) {
+  async findById(@Param('id') id: string) {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool id');
     }

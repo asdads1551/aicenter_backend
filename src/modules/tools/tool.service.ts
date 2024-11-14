@@ -29,6 +29,16 @@ export class ToolService {
     return result.modifiedCount === 1;
   }
 
+  async adjustLikes(id: string, range: number): Promise<boolean> {
+    const result = await this.toolModel.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+      { $inc: { likeCount: range } },
+    );
+    return result.modifiedCount === 1;
+  }
+
   async deleteOne(id: string): Promise<boolean> {
     const result = await this.toolModel.deleteOne({ _id: id });
     return result.deletedCount === 1;

@@ -12,5 +12,6 @@ import { AuthModule } from '../auth/auth.module';
   ],
   controllers: [ToolController],
   providers: [ToolService],
+  exports: [ToolService],
 })
 export class ToolModule {}
