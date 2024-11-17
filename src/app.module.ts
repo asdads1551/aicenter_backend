@@ -8,6 +8,7 @@ import { CategoryModule } from './modules/categories/category.module';
 import { ToolLikeModule } from './modules/toolLikes/tool-like.module';
 import { UserModule } from './modules/users/user.module';
 import { ToolReviewModule } from './modules/toolReviews/tool-review.module';
+import { ToolFavModule } from './modules/toolFavs/tool-fav.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ToolReviewModule } from './modules/toolReviews/tool-review.module';
     ToolModule,
     ToolLikeModule,
     ToolReviewModule,
+    ToolFavModule,
     UserModule,
   ],
   controllers: [AppController],

@@ -40,6 +40,16 @@ export class ToolService {
     return result.modifiedCount === 1;
   }
 
+  async adjustFavs(id: string, range: number): Promise<boolean> {
+    const result = await this.toolModel.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+      { $inc: { favCount: range } },
+    );
+    return result.modifiedCount === 1;
+  }
+
   async addReview(id: string, rating: number): Promise<boolean> {
     if (rating < 1 || rating > 5) {
       throw new Error('Rating must be between 1 and 5');
