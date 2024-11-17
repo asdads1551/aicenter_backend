@@ -1,10 +1,11 @@
-import { Model } from 'mongoose';
+import { Model, Query } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ToolComment } from './tool-comment.schema';
 import { CreateToolCommentDto } from './dto/create-tool-comment.dto';
 import { ToolService } from '../tools/tool.service';
 import { isNil } from 'lodash';
+import { QueryToolCommentDto } from './dto/query-tool-comment.dto';
 
 @Injectable()
 export class ToolCommentService {
@@ -15,6 +16,15 @@ export class ToolCommentService {
 
   async findAll(): Promise<ToolComment[]> {
     return this.toolCommentModel.find().exec();
+  }
+
+  async findByQuery(dto: QueryToolCommentDto): Promise<ToolComment[]> {
+    return this.toolCommentModel
+      .find({
+        ...((dto.userId && { userId: dto.userId }) || {}),
+        ...((dto.toolId && { toolId: dto.toolId }) || {}),
+      })
+      .exec();
   }
 
   async findOne(id: string): Promise<ToolComment | null> {

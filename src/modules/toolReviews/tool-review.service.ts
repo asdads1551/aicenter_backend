@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ToolReview } from './tool-review.schema';
 import { CreateToolReviewDto } from './dto/create-tool-review.dto';
+import { QueryToolReviewDto } from './dto/query-tool-review.dto';
 import { ToolService } from '../tools/tool.service';
 import { isNil } from 'lodash';
 
@@ -15,6 +16,15 @@ export class ToolReviewService {
 
   async findAll(): Promise<ToolReview[]> {
     return this.toolReviewModel.find().exec();
+  }
+
+  async findByQuery(dto: QueryToolReviewDto): Promise<ToolReview[]> {
+    return this.toolReviewModel
+      .find({
+        ...((dto.userId && { userId: dto.userId }) || {}),
+        ...((dto.toolId && { toolId: dto.toolId }) || {}),
+      })
+      .exec();
   }
 
   async findByToolId(toolId: string): Promise<ToolReview[]> {

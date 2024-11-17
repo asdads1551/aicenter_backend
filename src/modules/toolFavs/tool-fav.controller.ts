@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ToolFavService } from './tool-fav.service';
@@ -15,16 +16,16 @@ import { isNil } from 'lodash';
 import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
+import { QueryToolFavDto } from './dto/query-tool-fav.dto';
 
 @ApiSecurity('api-key')
 @Controller('tool-fav')
-@UseGuards(AuthGuard('api-key'))
 export class ToolFavController {
   constructor(private readonly toolFavService: ToolFavService) {}
 
   @Get()
-  async getAll() {
-    return this.toolFavService.findAll();
+  async getAll(@Query() dto: QueryToolFavDto) {
+    return this.toolFavService.findByQuery(dto);
   }
 
   @ApiParam({
@@ -45,6 +46,7 @@ export class ToolFavController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('api-key'))
   async createOne(@Body() dto: CreateToolFavDto) {
     try {
       return await this.toolFavService.create(dto);
@@ -61,6 +63,7 @@ export class ToolFavController {
     required: true,
     type: String,
   })
+  @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')
   async deleteOne(@Param('id') id: string) {
     if (!isValidObjectId(id)) {

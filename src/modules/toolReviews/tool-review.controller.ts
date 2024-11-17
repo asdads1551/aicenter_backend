@@ -7,10 +7,12 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ToolReviewService } from './tool-review.service';
 import { CreateToolReviewDto } from './dto/create-tool-review.dto';
+import { QueryToolReviewDto } from './dto/query-tool-review.dto';
 import { isNil } from 'lodash';
 import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
@@ -22,8 +24,8 @@ export class ToolReviewController {
   constructor(private readonly toolReviewService: ToolReviewService) {}
 
   @Get()
-  async getAll() {
-    return this.toolReviewService.findAll();
+  async findByQuery(@Query() dto: QueryToolReviewDto) {
+    return this.toolReviewService.findByQuery(dto);
   }
 
   @ApiParam({

@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ToolCommentService } from './tool-comment.service';
@@ -15,16 +16,16 @@ import { isNil } from 'lodash';
 import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
+import { QueryToolCommentDto } from './dto/query-tool-comment.dto';
 
 @ApiSecurity('api-key')
-@Controller('tool-like')
-@UseGuards(AuthGuard('api-key'))
+@Controller('tool-comment')
 export class ToolCommentController {
   constructor(private readonly toolCommentService: ToolCommentService) {}
 
   @Get()
-  async getAll() {
-    return this.toolCommentService.findAll();
+  async findByQuery(@Query() dto: QueryToolCommentDto) {
+    return this.toolCommentService.findByQuery(dto);
   }
 
   @ApiParam({
@@ -45,6 +46,7 @@ export class ToolCommentController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('api-key'))
   async createOne(@Body() dto: CreateToolCommentDto) {
     try {
       return await this.toolCommentService.create(dto);
@@ -61,6 +63,7 @@ export class ToolCommentController {
     required: true,
     type: String,
   })
+  @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')
   async deleteOne(@Param('id') id: string) {
     if (!isValidObjectId(id)) {
