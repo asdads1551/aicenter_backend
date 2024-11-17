@@ -14,7 +14,7 @@ import { ToolReviewService } from './tool-review.service';
 import { CreateToolReviewDto } from './dto/create-tool-review.dto';
 import { QueryToolReviewDto } from './dto/query-tool-review.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -45,6 +45,9 @@ export class ToolReviewController {
     return doc;
   }
 
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   @Post()
   async createOne(@Body() dto: CreateToolReviewDto) {
@@ -58,6 +61,9 @@ export class ToolReviewController {
     }
   }
 
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   @ApiParam({
     name: 'id',

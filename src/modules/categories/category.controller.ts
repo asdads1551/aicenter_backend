@@ -14,7 +14,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -46,6 +46,9 @@ export class CategoryController {
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     try {
@@ -64,6 +67,9 @@ export class CategoryController {
     type: String,
   })
   @Patch('/:id')
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   async updateCategory(
     @Param('id') id: string,
@@ -91,6 +97,9 @@ export class CategoryController {
     type: String,
   })
   @Delete('/:id')
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   async deleteCategory(@Param('id') id: string) {
     if (!isValidObjectId(id)) {

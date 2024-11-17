@@ -13,7 +13,7 @@ import {
 import { ToolCommentFavService } from './tool-comment-fav.service';
 import { CreateToolCommentFavDto } from './dto/create-tool-comment-fav.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryToolCommentFavDto } from './dto/query-tool-comment-fav.dto';
@@ -62,6 +62,9 @@ export class ToolCommentFavController {
     name: 'id',
     required: true,
     type: String,
+  })
+  @ApiHeader({
+    name: 'x-api-key',
   })
   @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')

@@ -12,13 +12,12 @@ import {
 import { ToolLikeService } from './tool-like.service';
 import { CreateToolLikeDto } from './dto/create-tool-like.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiSecurity('api-key')
 @Controller('tool-like')
-@UseGuards(AuthGuard('api-key'))
 export class ToolLikeController {
   constructor(private readonly toolLikeService: ToolLikeService) {}
 
@@ -45,6 +44,10 @@ export class ToolLikeController {
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-api-key',
+  })
+  @UseGuards(AuthGuard('api-key'))
   async createOne(@Body() dto: CreateToolLikeDto) {
     try {
       return await this.toolLikeService.create(dto);
@@ -62,6 +65,10 @@ export class ToolLikeController {
     type: String,
   })
   @Delete('/:id')
+  @ApiHeader({
+    name: 'x-api-key',
+  })
+  @UseGuards(AuthGuard('api-key'))
   async deleteOne(@Param('id') id: string) {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool like id');

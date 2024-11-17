@@ -13,7 +13,7 @@ import {
 import { ToolFavService } from './tool-fav.service';
 import { CreateToolFavDto } from './dto/create-tool-fav.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryToolFavDto } from './dto/query-tool-fav.dto';
@@ -46,6 +46,9 @@ export class ToolFavController {
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   async createOne(@Body() dto: CreateToolFavDto) {
     try {
@@ -62,6 +65,9 @@ export class ToolFavController {
     name: 'id',
     required: true,
     type: String,
+  })
+  @ApiHeader({
+    name: 'x-api-key',
   })
   @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')

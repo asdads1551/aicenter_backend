@@ -13,7 +13,7 @@ import {
 import { ToolCommentService } from './tool-comment.service';
 import { CreateToolCommentDto } from './dto/create-tool-comment.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 import { QueryToolCommentDto } from './dto/query-tool-comment.dto';
@@ -46,6 +46,9 @@ export class ToolCommentController {
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   async createOne(@Body() dto: CreateToolCommentDto) {
     try {
@@ -62,6 +65,9 @@ export class ToolCommentController {
     name: 'id',
     required: true,
     type: String,
+  })
+  @ApiHeader({
+    name: 'x-api-key',
   })
   @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')

@@ -5,15 +5,17 @@ import { IsObjectId } from 'class-validator-mongo-object-id';
 export class QueryToolFavDto {
   @ApiProperty({
     example: '<userId>',
+    required: false,
   })
   @IsOptional()
   @IsObjectId()
-  userId: string;
+  userId?: string;
 
   @ApiProperty({
     example: '<toolId>',
+    required: false,
   })
   @IsOptional()
   @IsObjectId()
-  toolId: string;
+  toolId?: string;
 }

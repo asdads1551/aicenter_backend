@@ -9,20 +9,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @Get('/hello')
-  getProduct() {
-    return {
-      data: [
-        {
-          id: 1,
-          name: 'product name',
-        },
-        {
-          id: 2,
-          name: 'product name - foo',
-        },
-      ],
-    };
-  }
 }

@@ -14,7 +14,7 @@ import { ToolService } from './tool.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiHeader, ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -46,6 +46,9 @@ export class ToolController {
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-api-key',
+  })
   @UseGuards(AuthGuard('api-key'))
   async createTool(@Body() createToolDto: CreateToolDto) {
     return this.toolService.create(createToolDto);
@@ -55,6 +58,9 @@ export class ToolController {
     name: 'id',
     required: true,
     type: String,
+  })
+  @ApiHeader({
+    name: 'x-api-key',
   })
   @UseGuards(AuthGuard('api-key'))
   @Patch('/:id')
@@ -79,6 +85,9 @@ export class ToolController {
     name: 'id',
     required: true,
     type: String,
+  })
+  @ApiHeader({
+    name: 'x-api-key',
   })
   @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')
