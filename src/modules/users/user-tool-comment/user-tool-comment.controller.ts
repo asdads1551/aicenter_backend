@@ -6,6 +6,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
@@ -13,6 +14,7 @@ import { ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { ToolCommentService } from 'src/modules/toolComments/tool-comment.service';
 import { CreateUserToolCommentDto } from './dto/create-user-tool-comment.dto';
+import { UpdateUserToolCommentDto } from './dto/update-user-tool-comment.dto';
 
 // User Auth
 @Controller('user/:userId/tool-comment')
@@ -79,6 +81,42 @@ export class UserToolCommentController {
       }
       throw e;
     }
+  }
+
+  @Patch('/:toolCommentId')
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    type: String,
+  })
+  @ApiParam({
+    name: 'toolCommentId',
+    required: true,
+    type: String,
+  })
+  async update(
+    @Param('userId') userId: string,
+    @Param('toolCommentId') toolCommentId: string,
+    @Body() dto: UpdateUserToolCommentDto,
+  ) {
+    if (!isValidObjectId(toolCommentId)) {
+      throw new BadRequestException('Invalid tool review id');
+    }
+    const doc = await this.toolCommentService.findUserOne(
+      userId,
+      toolCommentId,
+    );
+    if (isNil(doc)) {
+      throw new NotFoundException();
+    }
+    const isSuccess = await this.toolCommentService.updateUserOne(
+      userId,
+      toolCommentId,
+      dto,
+    );
+    return {
+      isSuccess,
+    };
   }
 
   @Delete('/:toolCommentId')

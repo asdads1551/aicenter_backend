@@ -6,6 +6,7 @@ import { CreateToolCommentDto } from './dto/create-tool-comment.dto';
 import { ToolService } from '../tools/tool.service';
 import { isNil } from 'lodash';
 import { QueryToolCommentDto } from './dto/query-tool-comment.dto';
+import { UpdateToolCommentDto } from './dto/update-tool-comment.dto';
 
 @Injectable()
 export class ToolCommentService {
@@ -74,6 +75,22 @@ export class ToolCommentService {
 
   async findUserAll(userId: string): Promise<ToolComment[]> {
     return this.toolCommentModel.find({ userId }).exec();
+  }
+
+  async updateUserOne(
+    userId: string,
+    id: string,
+    dto: UpdateToolCommentDto,
+  ): Promise<boolean> {
+    const toolComment = await this.findUserOne(userId, id);
+    if (isNil(toolComment)) {
+      return false;
+    }
+    const result = await this.toolCommentModel.updateOne(
+      { userId, _id: id },
+      dto,
+    );
+    return result.modifiedCount === 1;
   }
 
   async deleteUserOne(userId: string, id: string): Promise<boolean> {
