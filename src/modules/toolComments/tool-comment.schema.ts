@@ -23,6 +23,11 @@ export class ToolComment {
     isRequired: true,
   })
   comment: string;
+
+  @Prop({
+    default: 0,
+  })
+  favCount: number;
 }
 
 export const ToolCommentSchema = SchemaFactory.createForClass(ToolComment);

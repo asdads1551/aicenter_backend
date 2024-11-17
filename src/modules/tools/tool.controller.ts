@@ -82,7 +82,7 @@ export class ToolController {
   })
   @UseGuards(AuthGuard('api-key'))
   @Delete('/:id')
-  async deleteTool(@Param('id') id: string) {
+  async deleteOne(@Param('id') id: string) {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool id');
     }

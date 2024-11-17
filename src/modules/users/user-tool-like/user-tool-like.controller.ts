@@ -89,7 +89,7 @@ export class UserToolLikeController {
     required: true,
     type: String,
   })
-  async deleteTool(
+  async deleteOne(
     @Param('userId') userId: string,
     @Param('toolLikeId') toolLikeId: string,
   ) {

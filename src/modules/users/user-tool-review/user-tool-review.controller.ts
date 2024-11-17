@@ -90,7 +90,7 @@ export class UserToolReviewController {
     required: true,
     type: String,
   })
-  async deleteTool(
+  async deleteOne(
     @Param('userId') userId: string,
     @Param('toolReviewId') toolReviewId: string,
   ) {

@@ -9,15 +9,16 @@ import {
   Post,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
-import { ToolCommentService } from 'src/modules/toolComments/tool-comment.service';
-import { CreateUserToolCommentDto } from './dto/create-user-tool-comment.dto';
+import { ToolCommentFavService } from 'src/modules/toolCommentFavs/tool-comment-fav.service';
+import { CreateUserToolCommentFavDto } from './dto/create-user-tool-comment-fav.dto';
 
 // User Auth
-@Controller('user/:userId/tool-comment')
-export class UserToolCommentController {
-  constructor(private readonly toolCommentService: ToolCommentService) {}
+@ApiSecurity('api-key')
+@Controller('user/:userId/tool-comment-fav')
+export class UserToolCommentFavController {
+  constructor(private readonly toolCommentFavService: ToolCommentFavService) {}
 
   @Get()
   @ApiParam({
@@ -26,30 +27,30 @@ export class UserToolCommentController {
     type: String,
   })
   async getAll(@Param('userId') userId: string) {
-    return this.toolCommentService.findUserAll(userId);
+    return this.toolCommentFavService.findUserAll(userId);
   }
 
-  @Get('/:toolCommentId')
+  @Get('/:toolCommentFavId')
   @ApiParam({
     name: 'userId',
     required: true,
     type: String,
   })
   @ApiParam({
-    name: 'toolCommentId',
+    name: 'toolCommentFavId',
     required: true,
     type: String,
   })
   async findTookById(
     @Param('userId') userId: string,
-    @Param('toolCommentId') toolCommentId: string,
+    @Param('toolCommentFavId') toolCommentFavId: string,
   ) {
-    if (!isValidObjectId(toolCommentId)) {
+    if (!isValidObjectId(toolCommentFavId)) {
       throw new BadRequestException('Invalid id');
     }
-    const doc = await this.toolCommentService.findUserOne(
+    const doc = await this.toolCommentFavService.findUserOne(
       userId,
-      toolCommentId,
+      toolCommentFavId,
     );
     if (isNil(doc)) {
       throw new NotFoundException();
@@ -65,13 +66,13 @@ export class UserToolCommentController {
   })
   async create(
     @Param('userId') userId: string,
-    @Body() dto: CreateUserToolCommentDto,
+    @Body() dto: CreateUserToolCommentFavDto,
   ) {
     try {
-      return await this.toolCommentService.create({
+      return await this.toolCommentFavService.create({
         userId,
         toolId: dto.toolId,
-        comment: dto.comment,
+        toolCommentId: dto.toolCommentId,
       });
     } catch (e) {
       if (e?.code == 11000) {
@@ -81,34 +82,34 @@ export class UserToolCommentController {
     }
   }
 
-  @Delete('/:toolCommentId')
+  @Delete('/:toolCommentFavId')
   @ApiParam({
     name: 'userId',
     required: true,
     type: String,
   })
   @ApiParam({
-    name: 'toolCommentId',
+    name: 'toolCommentFavId',
     required: true,
     type: String,
   })
   async deleteOne(
     @Param('userId') userId: string,
-    @Param('toolCommentId') toolCommentId: string,
+    @Param('toolCommentFavId') toolCommentFavId: string,
   ) {
-    if (!isValidObjectId(toolCommentId)) {
-      throw new BadRequestException('Invalid tool review id');
+    if (!isValidObjectId(toolCommentFavId)) {
+      throw new BadRequestException('Invalid tool comment fav id');
     }
-    const doc = await this.toolCommentService.findUserOne(
+    const doc = await this.toolCommentFavService.findUserOne(
       userId,
-      toolCommentId,
+      toolCommentFavId,
     );
     if (isNil(doc)) {
       throw new NotFoundException();
     }
-    const isSuccess = await this.toolCommentService.deleteUserOne(
+    const isSuccess = await this.toolCommentFavService.deleteUserOne(
       userId,
-      toolCommentId,
+      toolCommentFavId,
     );
     return {
       isSuccess,

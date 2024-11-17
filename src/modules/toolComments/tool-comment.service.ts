@@ -1,4 +1,4 @@
-import { Model, Query } from 'mongoose';
+import mongoose, { Model, Query } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ToolComment } from './tool-comment.schema';
@@ -56,6 +56,16 @@ export class ToolCommentService {
       console.error(e);
     }
     return result.deletedCount === 1;
+  }
+
+  async adjustFavs(id: string, range: number): Promise<boolean> {
+    const result = await this.toolCommentModel.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+      { $inc: { favCount: range } },
+    );
+    return result.modifiedCount === 1;
   }
 
   async findUserOne(userId: string, id: string): Promise<ToolComment | null> {
