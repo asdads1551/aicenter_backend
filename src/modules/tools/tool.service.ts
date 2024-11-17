@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Tool } from './tool.schema';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class ToolService {
@@ -35,6 +36,52 @@ export class ToolService {
         _id: new mongoose.Types.ObjectId(id),
       },
       { $inc: { likeCount: range } },
+    );
+    return result.modifiedCount === 1;
+  }
+
+  async addReview(id: string, rating: number): Promise<boolean> {
+    if (rating < 1 || rating > 5) {
+      throw new Error('Rating must be between 1 and 5');
+    }
+    const tool = await this.toolModel.findOne({ _id: id });
+    if (isNil(tool)) {
+      return false;
+    }
+    const newAvgReviewRating =
+      (tool.reviewCount * tool.reviewAvgRating + rating) /
+      (tool.reviewCount + 1);
+    const result = await this.toolModel.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+      {
+        reviewAvgRating: newAvgReviewRating,
+        reviewCount: tool.reviewCount + 1,
+      },
+    );
+    return result.modifiedCount === 1;
+  }
+
+  async deleteReview(id: string, rating: number): Promise<boolean> {
+    if (rating < 1 || rating > 5) {
+      throw new Error('Rating must be between 1 and 5');
+    }
+    const tool = await this.toolModel.findOne({ _id: id });
+    if (isNil(tool)) {
+      return false;
+    }
+    const newAvgReviewRating =
+      (tool.reviewCount * tool.reviewAvgRating - rating) /
+      (tool.reviewCount - 1);
+    const result = await this.toolModel.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+      {
+        reviewAvgRating: newAvgReviewRating,
+        reviewCount: tool.reviewCount - 1,
+      },
     );
     return result.modifiedCount === 1;
   }

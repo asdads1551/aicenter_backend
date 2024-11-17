@@ -9,16 +9,15 @@ import {
   Post,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
-import { ToolLikeService } from 'src/modules/toolLikes/tool-like.service';
-import { CreateUserToolLikeDto } from './dto/create-user-tool-like.dto';
+import { ToolReviewService } from 'src/modules/toolReviews/tool-review.service';
+import { CreateUserToolReviewDto } from './dto/create-user-tool-review.dto';
 
 // User Auth
-@ApiSecurity('api-key')
-@Controller('user/:userId/tool-like')
-export class UserToolLikeController {
-  constructor(private readonly toolLikeService: ToolLikeService) {}
+@Controller('user/:userId/tool-review')
+export class UserToolReviewController {
+  constructor(private readonly toolReviewService: ToolReviewService) {}
 
   @Get()
   @ApiParam({
@@ -27,28 +26,28 @@ export class UserToolLikeController {
     type: String,
   })
   async getAll(@Param('userId') userId: string) {
-    return this.toolLikeService.findUserAll(userId);
+    return this.toolReviewService.findUserAll(userId);
   }
 
-  @Get('/:toolLikeId')
+  @Get('/:toolReviewId')
   @ApiParam({
     name: 'userId',
     required: true,
     type: String,
   })
   @ApiParam({
-    name: 'toolLikeId',
+    name: 'toolReviewId',
     required: true,
     type: String,
   })
   async findTookById(
     @Param('userId') userId: string,
-    @Param('toolLikeId') toolLikeId: string,
+    @Param('toolReviewId') toolReviewId: string,
   ) {
-    if (!isValidObjectId(toolLikeId)) {
+    if (!isValidObjectId(toolReviewId)) {
       throw new BadRequestException('Invalid id');
     }
-    const doc = await this.toolLikeService.findUserOne(userId, toolLikeId);
+    const doc = await this.toolReviewService.findUserOne(userId, toolReviewId);
     if (isNil(doc)) {
       throw new NotFoundException();
     }
@@ -63,12 +62,14 @@ export class UserToolLikeController {
   })
   async create(
     @Param('userId') userId: string,
-    @Body() dto: CreateUserToolLikeDto,
+    @Body() dto: CreateUserToolReviewDto,
   ) {
     try {
-      return await this.toolLikeService.create({
+      return await this.toolReviewService.create({
         userId,
         toolId: dto.toolId,
+        rating: dto.rating,
+        comment: dto.comment,
       });
     } catch (e) {
       if (e?.code == 11000) {
@@ -78,31 +79,31 @@ export class UserToolLikeController {
     }
   }
 
-  @Delete('/:toolLikeId')
+  @Delete('/:toolReviewId')
   @ApiParam({
     name: 'userId',
     required: true,
     type: String,
   })
   @ApiParam({
-    name: 'toolLikeId',
+    name: 'toolReviewId',
     required: true,
     type: String,
   })
   async deleteTool(
     @Param('userId') userId: string,
-    @Param('toolLikeId') toolLikeId: string,
+    @Param('toolReviewId') toolReviewId: string,
   ) {
-    if (!isValidObjectId(toolLikeId)) {
-      throw new BadRequestException('Invalid tool like id');
+    if (!isValidObjectId(toolReviewId)) {
+      throw new BadRequestException('Invalid tool review id');
     }
-    const doc = await this.toolLikeService.findUserOne(userId, toolLikeId);
+    const doc = await this.toolReviewService.findUserOne(userId, toolReviewId);
     if (isNil(doc)) {
       throw new NotFoundException();
     }
-    const isSuccess = await this.toolLikeService.deleteUserOne(
+    const isSuccess = await this.toolReviewService.deleteUserOne(
       userId,
-      toolLikeId,
+      toolReviewId,
     );
     return {
       isSuccess,

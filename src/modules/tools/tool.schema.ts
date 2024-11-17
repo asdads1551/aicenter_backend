@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { Double } from 'mongodb';
 
 export type ToolDocument = HydratedDocument<Tool>;
 
@@ -50,7 +52,9 @@ export class Tool {
   commentCount: number;
 
   @Prop({
-    default: 0,
+    type: Double,
+    default: 0.0,
+    required: false,
   })
   reviewAvgRating: number;
 
