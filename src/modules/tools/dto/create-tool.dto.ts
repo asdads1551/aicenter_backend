@@ -47,17 +47,17 @@ export class CreateToolDto {
   url: string;
 
   @ApiProperty({
-    example: [1, 2, 3],
+    example: ['673dc5b7574ab4d42a37bba1'],
   })
   @IsArray()
-  @IsInt({ each: true })
-  categoryIds: number[];
+  @IsString({ each: true })
+  categoryIds: string[];
 
   @ApiProperty({
-    example: 1,
+    example: '673dc5b7574ab4d42a37bba1',
   })
-  @IsInt()
-  mainCategoryId: number;
+  @IsString()
+  mainCategoryId: string;
 
   @ApiProperty({
     example: false,

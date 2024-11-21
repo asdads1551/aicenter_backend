@@ -45,19 +45,19 @@ export class UpdateToolDto {
   url: string;
 
   @ApiProperty({
-    example: [4, 5],
+    example: ['673dc5b7574ab4d42a37bba1'],
   })
   @IsArray()
   @IsInt({ each: true })
   @IsOptional()
-  categoryIds: number[];
+  categoryIds: string[];
 
   @ApiProperty({
-    example: 4,
+    example: '673dc5b7574ab4d42a37bba1',
   })
   @IsInt()
   @IsOptional()
-  mainCategoryId: number;
+  mainCategoryId: string;
 
   @ApiProperty({
     example: true,

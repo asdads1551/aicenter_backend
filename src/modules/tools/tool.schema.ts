@@ -33,12 +33,12 @@ export class Tool {
   @Prop({
     isRequired: true,
   })
-  categoryIds: number[];
+  categoryIds: string[];
 
   @Prop({
     isRequired: true,
   })
-  mainCategoryId: number;
+  mainCategoryId: string;
 
   @Prop({
     default: false,
