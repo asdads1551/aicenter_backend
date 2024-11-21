@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 import { ToolTagDto } from './create-tool.dto';
 
 export class UpdateToolDto {
@@ -48,14 +42,14 @@ export class UpdateToolDto {
     example: ['673dc5b7574ab4d42a37bba1'],
   })
   @IsArray()
-  @IsInt({ each: true })
+  @IsString({ each: true })
   @IsOptional()
   categoryIds: string[];
 
   @ApiProperty({
     example: '673dc5b7574ab4d42a37bba1',
   })
-  @IsInt()
+  @IsString()
   @IsOptional()
   mainCategoryId: string;
 
