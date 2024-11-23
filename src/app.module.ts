@@ -11,10 +11,13 @@ import { ToolReviewModule } from './modules/toolReviews/tool-review.module';
 import { ToolFavModule } from './modules/toolFavs/tool-fav.module';
 import { ToolCommentModule } from './modules/toolComments/tool-comment.module';
 import { ToolCommentFavModule } from './modules/toolCommentFavs/tool-comment-fav.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING),
     CategoryModule,
     ToolModule,
@@ -24,6 +27,7 @@ import { ToolCommentFavModule } from './modules/toolCommentFavs/tool-comment-fav
     ToolCommentModule,
     ToolCommentFavModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
