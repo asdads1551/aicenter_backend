@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { GoogleStrategy } from './google.strategy';
+import { AuthController } from '../modules/auth/auth.controller';
+import { AuthService } from '../modules/auth/auth.service';
+import { GoogleStrategy } from '../modules/auth/strategies/google.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -21,4 +21,4 @@ import { PassportModule } from '@nestjs/passport';
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy],
 })
-export class AuthModule {} 
+export class AuthModule {}
