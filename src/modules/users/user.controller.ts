@@ -6,8 +6,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { pick } from 'lodash';
 
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor() {}

@@ -7,16 +7,20 @@ import {
   NotFoundException,
   Param,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { ToolFavService } from 'src/modules/toolFavs/tool-fav.service';
 import { CreateUserToolFavDto } from './dto/create-user-tool-fav.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 // User Auth
-@ApiSecurity('api-key')
+@ApiBearerAuth()
 @Controller('user/:userId/tool-fav')
+@UseGuards(AuthGuard('jwt'))
 export class UserToolFavController {
   constructor(private readonly toolFavService: ToolFavService) {}
 
@@ -26,7 +30,10 @@ export class UserToolFavController {
     required: true,
     type: String,
   })
-  async getAll(@Param('userId') userId: string) {
+  async getAll(@Req() req, @Param('userId') userId: string) {
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
+    }
     return this.toolFavService.findUserAll(userId);
   }
 
@@ -42,11 +49,15 @@ export class UserToolFavController {
     type: String,
   })
   async findTookById(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolFavId') toolFavId: string,
   ) {
     if (!isValidObjectId(toolFavId)) {
       throw new BadRequestException('Invalid id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolFavService.findUserOne(userId, toolFavId);
     if (isNil(doc)) {
@@ -62,9 +73,13 @@ export class UserToolFavController {
     type: String,
   })
   async create(
+    @Req() req,
     @Param('userId') userId: string,
     @Body() dto: CreateUserToolFavDto,
   ) {
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
+    }
     try {
       return await this.toolFavService.create({
         userId,
@@ -90,11 +105,15 @@ export class UserToolFavController {
     type: String,
   })
   async deleteOne(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolFavId') toolFavId: string,
   ) {
     if (!isValidObjectId(toolFavId)) {
       throw new BadRequestException('Invalid tool fav id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolFavService.findUserOne(userId, toolFavId);
     if (isNil(doc)) {

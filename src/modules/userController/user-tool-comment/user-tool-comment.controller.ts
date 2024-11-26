@@ -8,15 +8,20 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { ToolCommentService } from 'src/modules/toolComments/tool-comment.service';
 import { CreateUserToolCommentDto } from './dto/create-user-tool-comment.dto';
 import { UpdateUserToolCommentDto } from './dto/update-user-tool-comment.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 // User Auth
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('user/:userId/tool-comment')
 export class UserToolCommentController {
   constructor(private readonly toolCommentService: ToolCommentService) {}
@@ -27,7 +32,10 @@ export class UserToolCommentController {
     required: true,
     type: String,
   })
-  async getAll(@Param('userId') userId: string) {
+  async getAll(@Req() req, @Param('userId') userId: string) {
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
+    }
     return this.toolCommentService.findUserAll(userId);
   }
 
@@ -43,11 +51,15 @@ export class UserToolCommentController {
     type: String,
   })
   async findTookById(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolCommentId') toolCommentId: string,
   ) {
     if (!isValidObjectId(toolCommentId)) {
       throw new BadRequestException('Invalid id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolCommentService.findUserOne(
       userId,
@@ -66,10 +78,14 @@ export class UserToolCommentController {
     type: String,
   })
   async create(
+    @Req() req,
     @Param('userId') userId: string,
     @Body() dto: CreateUserToolCommentDto,
   ) {
     try {
+      if (req.user._id != userId) {
+        throw new BadRequestException('Invalid user id');
+      }
       return await this.toolCommentService.create({
         userId,
         toolId: dto.toolId,
@@ -95,12 +111,16 @@ export class UserToolCommentController {
     type: String,
   })
   async update(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolCommentId') toolCommentId: string,
     @Body() dto: UpdateUserToolCommentDto,
   ) {
     if (!isValidObjectId(toolCommentId)) {
       throw new BadRequestException('Invalid tool review id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolCommentService.findUserOne(
       userId,
@@ -131,11 +151,15 @@ export class UserToolCommentController {
     type: String,
   })
   async deleteOne(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolCommentId') toolCommentId: string,
   ) {
     if (!isValidObjectId(toolCommentId)) {
       throw new BadRequestException('Invalid tool review id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolCommentService.findUserOne(
       userId,

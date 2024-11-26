@@ -12,8 +12,6 @@ export class User {
 
   @Prop({
     isRequired: true,
-    isUnique: true,
-    index: true,
   })
   email: string;
 
@@ -40,3 +38,5 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index({ email: 1 }, { unique: true });

@@ -7,14 +7,18 @@ import {
   NotFoundException,
   Param,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { ToolReviewService } from 'src/modules/toolReviews/tool-review.service';
 import { CreateUserToolReviewDto } from './dto/create-user-tool-review.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-// User Auth
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('user/:userId/tool-review')
 export class UserToolReviewController {
   constructor(private readonly toolReviewService: ToolReviewService) {}
@@ -25,7 +29,10 @@ export class UserToolReviewController {
     required: true,
     type: String,
   })
-  async getAll(@Param('userId') userId: string) {
+  async getAll(@Req() req, @Param('userId') userId: string) {
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
+    }
     return this.toolReviewService.findUserAll(userId);
   }
 
@@ -41,11 +48,15 @@ export class UserToolReviewController {
     type: String,
   })
   async findTookById(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolReviewId') toolReviewId: string,
   ) {
     if (!isValidObjectId(toolReviewId)) {
       throw new BadRequestException('Invalid id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolReviewService.findUserOne(userId, toolReviewId);
     if (isNil(doc)) {
@@ -61,10 +72,14 @@ export class UserToolReviewController {
     type: String,
   })
   async create(
+    @Req() req,
     @Param('userId') userId: string,
     @Body() dto: CreateUserToolReviewDto,
   ) {
     try {
+      if (req.user._id != userId) {
+        throw new BadRequestException('Invalid user id');
+      }
       return await this.toolReviewService.create({
         userId,
         toolId: dto.toolId,
@@ -91,11 +106,15 @@ export class UserToolReviewController {
     type: String,
   })
   async deleteOne(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolReviewId') toolReviewId: string,
   ) {
     if (!isValidObjectId(toolReviewId)) {
       throw new BadRequestException('Invalid tool review id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolReviewService.findUserOne(userId, toolReviewId);
     if (isNil(doc)) {

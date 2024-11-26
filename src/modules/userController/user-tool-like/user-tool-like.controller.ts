@@ -7,15 +7,18 @@ import {
   NotFoundException,
   Param,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { isNil } from 'lodash';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { ToolLikeService } from 'src/modules/toolLikes/tool-like.service';
 import { CreateUserToolLikeDto } from './dto/create-user-tool-like.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-// User Auth
-@ApiSecurity('api-key')
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('user/:userId/tool-like')
 export class UserToolLikeController {
   constructor(private readonly toolLikeService: ToolLikeService) {}
@@ -26,7 +29,10 @@ export class UserToolLikeController {
     required: true,
     type: String,
   })
-  async getAll(@Param('userId') userId: string) {
+  async getAll(@Req() req, @Param('userId') userId: string) {
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
+    }
     return this.toolLikeService.findUserAll(userId);
   }
 
@@ -42,11 +48,15 @@ export class UserToolLikeController {
     type: String,
   })
   async findTookById(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolLikeId') toolLikeId: string,
   ) {
     if (!isValidObjectId(toolLikeId)) {
       throw new BadRequestException('Invalid id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolLikeService.findUserOne(userId, toolLikeId);
     if (isNil(doc)) {
@@ -62,10 +72,14 @@ export class UserToolLikeController {
     type: String,
   })
   async create(
+    @Req() req,
     @Param('userId') userId: string,
     @Body() dto: CreateUserToolLikeDto,
   ) {
     try {
+      if (req.user._id != userId) {
+        throw new BadRequestException('Invalid user id');
+      }
       return await this.toolLikeService.create({
         userId,
         toolId: dto.toolId,
@@ -90,11 +104,15 @@ export class UserToolLikeController {
     type: String,
   })
   async deleteOne(
+    @Req() req,
     @Param('userId') userId: string,
     @Param('toolLikeId') toolLikeId: string,
   ) {
     if (!isValidObjectId(toolLikeId)) {
       throw new BadRequestException('Invalid tool like id');
+    }
+    if (req.user._id != userId) {
+      throw new BadRequestException('Invalid user id');
     }
     const doc = await this.toolLikeService.findUserOne(userId, toolLikeId);
     if (isNil(doc)) {
