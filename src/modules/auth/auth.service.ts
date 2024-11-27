@@ -20,27 +20,44 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async signIn(user: CreateUserDto) {
-    if (!user) {
+  async signIn(dto: CreateUserDto) {
+    if (!dto) {
       throw new BadRequestException('Unauthenticated');
     }
 
-    const userExists = await this.userService.findOneByEmail(user.email);
+    let userExists = await this.userService.findOneByEmail(dto.email);
 
-    if (!userExists) {
-      return this.registerUser(user);
+    // Seems like the github user might not have an email from API payload
+    if (!userExists && dto.isGithubUser) {
+      userExists = await this.userService.findOneByGithubId(
+        dto.sourceData?.github?.profile?.id,
+      );
     }
 
-    if (!userExists.isGoogleUser && user.isGoogleUser) {
-      userExists.isGoogleUser = true;
-      this.userService.updateOne(get(userExists, '_id'), {
-        ...userExists,
+    if (!userExists) {
+      return this.registerUser(dto);
+    }
+
+    if (dto.isGoogleUser) {
+      const updatedDto = {
         isGoogleUser: true,
         sourceData: {
           ...userExists?.sourceData,
-          google: user?.sourceData?.google,
+          ...dto?.sourceData,
         },
-      });
+      };
+      await this.userService.updateOne(get(userExists, '_id'), updatedDto);
+    }
+
+    if (dto.isGithubUser) {
+      const updatedDto = {
+        isGithubUser: true,
+        sourceData: {
+          ...userExists?.sourceData,
+          github: dto?.sourceData?.github,
+        },
+      };
+      await this.userService.updateOne(get(userExists, '_id'), updatedDto);
     }
 
     return this.generateJwt({

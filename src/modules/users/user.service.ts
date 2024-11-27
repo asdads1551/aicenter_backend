@@ -25,12 +25,24 @@ export class UserService {
       .exec();
   }
 
+  async findOneByGithubId(githubId: string): Promise<User | null> {
+    return this.userModel
+      .findOne({
+        sourceData: {
+          github: {
+            id: githubId,
+          },
+        },
+      })
+      .exec();
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdCat = new this.userModel(createUserDto);
     return createdCat.save();
   }
 
-  async updateOne(id: string, dto: UpdateUserDto): Promise<boolean> {
+  async updateOne(id: string, dto: Partial<UpdateUserDto>): Promise<boolean> {
     const result = await this.userModel
       .updateOne({ _id: new mongoose.Types.ObjectId(id) }, dto)
       .exec();
