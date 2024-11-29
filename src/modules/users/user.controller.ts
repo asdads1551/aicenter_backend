@@ -29,7 +29,7 @@ export class UserController {
     }
 
     const userDto = new UserDto(user);
-    return userDto.getBasicInfo();
+    return userDto.getMyInfo();
   }
 
   @Get()
