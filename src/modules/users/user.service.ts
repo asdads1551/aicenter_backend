@@ -4,12 +4,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { GetUserBasicInfosDto } from './dto/get-user-basic-infos.dto';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(dto: GetUserBasicInfosDto): Promise<User[]> {
+    return this.userModel
+      .find({
+        _id: dto.userIds,
+      })
+      .exec();
+  }
+
+  async findAllBasicInfos(): Promise<User[]> {
     return this.userModel.find().exec();
   }
 
