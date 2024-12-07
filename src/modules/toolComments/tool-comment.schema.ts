@@ -27,7 +27,7 @@ export class ToolComment {
   @Prop({
     default: 0,
   })
-  favCount: number;
+  likeCount: number;
 }
 
 export const ToolCommentSchema = SchemaFactory.createForClass(ToolComment);

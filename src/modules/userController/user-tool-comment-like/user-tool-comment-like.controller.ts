@@ -13,16 +13,16 @@ import {
 import { isNil } from 'lodash';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
-import { ToolCommentFavService } from 'src/modules/toolCommentFavs/tool-comment-fav.service';
-import { CreateUserToolCommentFavDto } from './dto/create-user-tool-comment-fav.dto';
+import { ToolCommentLikeService } from 'src/modules/toolCommentLikes/tool-comment-like.service';
+import { CreateUserToolCommentLikeDto } from './dto/create-user-tool-comment-like.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 // User Auth
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
-@Controller('user/:userId/tool-comment-fav')
-export class UserToolCommentFavController {
-  constructor(private readonly toolCommentFavService: ToolCommentFavService) {}
+@Controller('user/:userId/tool-comment-like')
+export class UserToolCommentLikeController {
+  constructor(private readonly toolCommentLikeService: ToolCommentLikeService) {}
 
   @Get()
   @ApiParam({
@@ -34,34 +34,34 @@ export class UserToolCommentFavController {
     if (req.user._id != userId) {
       throw new BadRequestException('Invalid user id');
     }
-    return this.toolCommentFavService.findUserAll(userId);
+    return this.toolCommentLikeService.findUserAll(userId);
   }
 
-  @Get('/:toolCommentFavId')
+  @Get('/:toolCommentLikeId')
   @ApiParam({
     name: 'userId',
     required: true,
     type: String,
   })
   @ApiParam({
-    name: 'toolCommentFavId',
+    name: 'toolCommentLikeId',
     required: true,
     type: String,
   })
   async findTookById(
     @Req() req,
     @Param('userId') userId: string,
-    @Param('toolCommentFavId') toolCommentFavId: string,
+    @Param('toolCommentLikeId') toolCommentLikeId: string,
   ) {
-    if (!isValidObjectId(toolCommentFavId)) {
+    if (!isValidObjectId(toolCommentLikeId)) {
       throw new BadRequestException('Invalid id');
     }
     if (req.user._id != userId) {
       throw new BadRequestException('Invalid user id');
     }
-    const doc = await this.toolCommentFavService.findUserOne(
+    const doc = await this.toolCommentLikeService.findUserOne(
       userId,
-      toolCommentFavId,
+      toolCommentLikeId,
     );
     if (isNil(doc)) {
       throw new NotFoundException();
@@ -78,13 +78,13 @@ export class UserToolCommentFavController {
   async create(
     @Req() req,
     @Param('userId') userId: string,
-    @Body() dto: CreateUserToolCommentFavDto,
+    @Body() dto: CreateUserToolCommentLikeDto,
   ) {
     try {
       if (req.user._id != userId) {
         throw new BadRequestException('Invalid user id');
       }
-      return await this.toolCommentFavService.create({
+      return await this.toolCommentLikeService.create({
         userId,
         toolId: dto.toolId,
         toolCommentId: dto.toolCommentId,
@@ -97,38 +97,38 @@ export class UserToolCommentFavController {
     }
   }
 
-  @Delete('/:toolCommentFavId')
+  @Delete('/:toolCommentLikeId')
   @ApiParam({
     name: 'userId',
     required: true,
     type: String,
   })
   @ApiParam({
-    name: 'toolCommentFavId',
+    name: 'toolCommentLikeId',
     required: true,
     type: String,
   })
   async deleteOne(
     @Req() req,
     @Param('userId') userId: string,
-    @Param('toolCommentFavId') toolCommentFavId: string,
+    @Param('toolCommentLikeId') toolCommentLikeId: string,
   ) {
-    if (!isValidObjectId(toolCommentFavId)) {
-      throw new BadRequestException('Invalid tool comment fav id');
+    if (!isValidObjectId(toolCommentLikeId)) {
+      throw new BadRequestException('Invalid tool comment like id');
     }
     if (req.user._id != userId) {
       throw new BadRequestException('Invalid user id');
     }
-    const doc = await this.toolCommentFavService.findUserOne(
+    const doc = await this.toolCommentLikeService.findUserOne(
       userId,
-      toolCommentFavId,
+      toolCommentLikeId,
     );
     if (isNil(doc)) {
       throw new NotFoundException();
     }
-    const isSuccess = await this.toolCommentFavService.deleteUserOne(
+    const isSuccess = await this.toolCommentLikeService.deleteUserOne(
       userId,
-      toolCommentFavId,
+      toolCommentLikeId,
     );
     return {
       isSuccess,

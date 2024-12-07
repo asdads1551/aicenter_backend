@@ -65,7 +65,7 @@ export class Tool {
   @Prop({
     default: 0,
   })
-  favCount: number;
+  saveCount: number;
 
   @Prop({
     default: 0,

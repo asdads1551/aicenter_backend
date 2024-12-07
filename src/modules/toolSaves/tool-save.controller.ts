@@ -21,11 +21,11 @@ import { QueryToolSaveDto } from './dto/query-tool-save.dto';
 @ApiSecurity('api-key')
 @Controller('tool-save')
 export class ToolSaveController {
-  constructor(private readonly toolFavService: ToolSaveService) {}
+  constructor(private readonly toolSaveService: ToolSaveService) {}
 
   @Get()
   async getAll(@Query() dto: QueryToolSaveDto) {
-    return this.toolFavService.findByQuery(dto);
+    return this.toolSaveService.findByQuery(dto);
   }
 
   @ApiParam({
@@ -38,7 +38,7 @@ export class ToolSaveController {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool id');
     }
-    const doc = await this.toolFavService.findOne(id);
+    const doc = await this.toolSaveService.findOne(id);
     if (isNil(doc)) {
       throw new NotFoundException();
     }
@@ -52,7 +52,7 @@ export class ToolSaveController {
   @UseGuards(AuthGuard('api-key'))
   async createOne(@Body() dto: CreateToolSaveDto) {
     try {
-      return await this.toolFavService.create(dto);
+      return await this.toolSaveService.create(dto);
     } catch (e) {
       if (e?.code == 11000) {
         throw new BadRequestException('The entity exists');
@@ -75,11 +75,11 @@ export class ToolSaveController {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool like id');
     }
-    const doc = await this.toolFavService.findOne(id);
+    const doc = await this.toolSaveService.findOne(id);
     if (isNil(doc)) {
       throw new NotFoundException();
     }
-    const isSuccess = await this.toolFavService.deleteOne(id);
+    const isSuccess = await this.toolSaveService.deleteOne(id);
     return {
       isSuccess,
     };

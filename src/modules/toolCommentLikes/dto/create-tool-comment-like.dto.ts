@@ -1,29 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
 import { IsObjectId } from 'class-validator-mongo-object-id';
 
-export class QueryToolCommentFavDto {
+export class CreateToolCommentLikeDto {
   @ApiProperty({
     example: '<userId>',
-    required: false,
   })
-  @IsOptional({ message: 'userId must be a valid ObjectId' })
-  @IsObjectId()
-  userId?: string;
+  @IsObjectId({ message: 'userId must be a valid ObjectId' })
+  userId: string;
 
   @ApiProperty({
     example: '<toolId>',
-    required: false,
   })
-  @IsOptional()
   @IsObjectId({ message: 'toolId must be a valid ObjectId' })
-  toolId?: string;
+  toolId: string;
 
   @ApiProperty({
-    example: '<toolId>',
-    required: false,
+    example: '<toolCommentId>',
   })
-  @IsOptional()
   @IsObjectId({ message: 'toolCommentId must be a valid ObjectId' })
-  toolCommentId?: string;
+  toolCommentId: string;
 }

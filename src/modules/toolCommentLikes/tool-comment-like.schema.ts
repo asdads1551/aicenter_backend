@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
-export type ToolCommentFavDocument = HydratedDocument<ToolCommentFav>;
+export type ToolCommentLikeDocument = HydratedDocument<ToolCommentLike>;
 
-@Schema({ timestamps: true, collection: 'toolCommentFavs' })
-export class ToolCommentFav {
+@Schema({ timestamps: true, collection: 'toolCommentLikes' })
+export class ToolCommentLike {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     isRequired: true,
@@ -28,6 +28,6 @@ export class ToolCommentFav {
   toolCommentId: string;
 }
 
-export const ToolCommentFavSchema =
-  SchemaFactory.createForClass(ToolCommentFav);
-ToolCommentFavSchema.index({ userId: 1, toolId: 1 }, { unique: true });
+export const ToolCommentLikeSchema =
+  SchemaFactory.createForClass(ToolCommentLike);
+ToolCommentLikeSchema.index({ userId: 1, toolId: 1 }, { unique: true });

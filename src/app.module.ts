@@ -10,7 +10,7 @@ import { UserControllerModule } from './modules/userController/userController.mo
 import { ToolReviewModule } from './modules/toolReviews/tool-review.module';
 import { ToolSaveModule } from './modules/toolSaves/tool-save.module';
 import { ToolCommentModule } from './modules/toolComments/tool-comment.module';
-import { ToolCommentFavModule } from './modules/toolCommentFavs/tool-comment-fav.module';
+import { ToolCommentLikeModule } from './modules/toolCommentLikes/tool-comment-like.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -24,7 +24,7 @@ import { AuthModule } from './modules/auth/auth.module';
     ToolReviewModule,
     ToolSaveModule,
     ToolCommentModule,
-    ToolCommentFavModule,
+    ToolCommentLikeModule,
     UserControllerModule,
   ],
   controllers: [AppController],

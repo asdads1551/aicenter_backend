@@ -10,22 +10,22 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ToolCommentFavService } from './tool-comment-fav.service';
-import { CreateToolCommentFavDto } from './dto/create-tool-comment-fav.dto';
+import { ToolCommentLikeService } from './tool-comment-like.service';
+import { CreateToolCommentLikeDto } from './dto/create-tool-comment-like.dto';
 import { isNil } from 'lodash';
 import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
-import { QueryToolCommentFavDto } from './dto/query-tool-comment-fav.dto';
+import { QueryToolCommentLikeDto } from './dto/query-tool-comment-like.dto';
 
 @ApiSecurity('api-key')
-@Controller('tool-comment-fav')
-export class ToolCommentFavController {
-  constructor(private readonly ToolCommentFavService: ToolCommentFavService) {}
+@Controller('tool-comment-like')
+export class ToolCommentLikeController {
+  constructor(private readonly ToolCommentLikeService: ToolCommentLikeService) {}
 
   @Get()
-  async getAll(@Query() dto: QueryToolCommentFavDto) {
-    return this.ToolCommentFavService.findByQuery(dto);
+  async getAll(@Query() dto: QueryToolCommentLikeDto) {
+    return this.ToolCommentLikeService.findByQuery(dto);
   }
 
   @ApiParam({
@@ -38,7 +38,7 @@ export class ToolCommentFavController {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool id');
     }
-    const doc = await this.ToolCommentFavService.findOne(id);
+    const doc = await this.ToolCommentLikeService.findOne(id);
     if (isNil(doc)) {
       throw new NotFoundException();
     }
@@ -47,9 +47,9 @@ export class ToolCommentFavController {
 
   @Post()
   @UseGuards(AuthGuard('api-key'))
-  async createOne(@Body() dto: CreateToolCommentFavDto) {
+  async createOne(@Body() dto: CreateToolCommentLikeDto) {
     try {
-      return await this.ToolCommentFavService.create(dto);
+      return await this.ToolCommentLikeService.create(dto);
     } catch (e) {
       if (e?.code == 11000) {
         throw new BadRequestException('The entity exists');
@@ -72,11 +72,11 @@ export class ToolCommentFavController {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Invalid tool like id');
     }
-    const doc = await this.ToolCommentFavService.findOne(id);
+    const doc = await this.ToolCommentLikeService.findOne(id);
     if (isNil(doc)) {
       throw new NotFoundException();
     }
-    const isSuccess = await this.ToolCommentFavService.deleteOne(id);
+    const isSuccess = await this.ToolCommentLikeService.deleteOne(id);
     return {
       isSuccess,
     };

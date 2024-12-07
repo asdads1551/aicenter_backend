@@ -40,12 +40,12 @@ export class ToolService {
     return result.modifiedCount === 1;
   }
 
-  async adjustFavs(id: string, range: number): Promise<boolean> {
+  async adjustSaves(id: string, range: number): Promise<boolean> {
     const result = await this.toolModel.updateOne(
       {
         _id: new mongoose.Types.ObjectId(id),
       },
-      { $inc: { favCount: range } },
+      { $inc: { saveCount: range } },
     );
     return result.modifiedCount === 1;
   }

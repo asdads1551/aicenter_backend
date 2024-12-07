@@ -59,12 +59,12 @@ export class ToolCommentService {
     return result.deletedCount === 1;
   }
 
-  async adjustFavs(id: string, range: number): Promise<boolean> {
+  async adjustLikes(id: string, range: number): Promise<boolean> {
     const result = await this.toolCommentModel.updateOne(
       {
         _id: new mongoose.Types.ObjectId(id),
       },
-      { $inc: { favCount: range } },
+      { $inc: { likeCount: range } },
     );
     return result.modifiedCount === 1;
   }
