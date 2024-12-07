@@ -10,21 +10,21 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ToolFavService } from './tool-fav.service';
-import { CreateToolFavDto } from './dto/create-tool-fav.dto';
+import { ToolSaveService } from './tool-save.service';
+import { CreateToolSaveDto } from './dto/create-tool-save.dto';
 import { isNil } from 'lodash';
 import { ApiParam, ApiSecurity, ApiHeader } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
-import { QueryToolFavDto } from './dto/query-tool-fav.dto';
+import { QueryToolSaveDto } from './dto/query-tool-save.dto';
 
 @ApiSecurity('api-key')
-@Controller('tool-fav')
-export class ToolFavController {
-  constructor(private readonly toolFavService: ToolFavService) {}
+@Controller('tool-save')
+export class ToolSaveController {
+  constructor(private readonly toolFavService: ToolSaveService) {}
 
   @Get()
-  async getAll(@Query() dto: QueryToolFavDto) {
+  async getAll(@Query() dto: QueryToolSaveDto) {
     return this.toolFavService.findByQuery(dto);
   }
 
@@ -50,7 +50,7 @@ export class ToolFavController {
     name: 'x-api-key',
   })
   @UseGuards(AuthGuard('api-key'))
-  async createOne(@Body() dto: CreateToolFavDto) {
+  async createOne(@Body() dto: CreateToolSaveDto) {
     try {
       return await this.toolFavService.create(dto);
     } catch (e) {

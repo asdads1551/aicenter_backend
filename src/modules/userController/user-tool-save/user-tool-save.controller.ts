@@ -13,16 +13,16 @@ import {
 import { isNil } from 'lodash';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { isValidObjectId } from 'mongoose';
-import { ToolFavService } from 'src/modules/toolFavs/tool-fav.service';
-import { CreateUserToolFavDto } from './dto/create-user-tool-fav.dto';
+import { ToolSaveService } from 'src/modules/toolSaves/tool-save.service';
+import { CreateUserToolSaveDto } from './dto/create-user-tool-save.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 // User Auth
 @ApiBearerAuth()
-@Controller('user/:userId/tool-fav')
+@Controller('user/:userId/tool-save')
 @UseGuards(AuthGuard('jwt'))
-export class UserToolFavController {
-  constructor(private readonly toolFavService: ToolFavService) {}
+export class UserToolSaveController {
+  constructor(private readonly toolFavService: ToolSaveService) {}
 
   @Get()
   @ApiParam({
@@ -75,7 +75,7 @@ export class UserToolFavController {
   async create(
     @Req() req,
     @Param('userId') userId: string,
-    @Body() dto: CreateUserToolFavDto,
+    @Body() dto: CreateUserToolSaveDto,
   ) {
     if (req.user._id != userId) {
       throw new BadRequestException('Invalid user id');

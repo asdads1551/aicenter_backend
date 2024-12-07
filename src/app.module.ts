@@ -8,7 +8,7 @@ import { CategoryModule } from './modules/categories/category.module';
 import { ToolLikeModule } from './modules/toolLikes/tool-like.module';
 import { UserControllerModule } from './modules/userController/userController.module';
 import { ToolReviewModule } from './modules/toolReviews/tool-review.module';
-import { ToolFavModule } from './modules/toolFavs/tool-fav.module';
+import { ToolSaveModule } from './modules/toolSaves/tool-save.module';
 import { ToolCommentModule } from './modules/toolComments/tool-comment.module';
 import { ToolCommentFavModule } from './modules/toolCommentFavs/tool-comment-fav.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -22,7 +22,7 @@ import { AuthModule } from './modules/auth/auth.module';
     ToolModule,
     ToolLikeModule,
     ToolReviewModule,
-    ToolFavModule,
+    ToolSaveModule,
     ToolCommentModule,
     ToolCommentFavModule,
     UserControllerModule,

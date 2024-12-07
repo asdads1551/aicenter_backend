@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import { IsObjectId } from 'class-validator-mongo-object-id';
 
-export class QueryToolFavDto {
+export class QueryToolSaveDto {
   @ApiProperty({
     example: '<userId>',
     required: false,

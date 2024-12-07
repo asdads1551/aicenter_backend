@@ -1,24 +1,24 @@
 import { Model, Query } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ToolFav } from './tool-fav.schema';
-import { CreateToolFavDto } from './dto/create-tool-fav.dto';
+import { ToolSave } from './tool-save.schema';
+import { CreateToolSaveDto } from './dto/create-tool-save.dto';
 import { ToolService } from '../tools/tool.service';
 import { isNil } from 'lodash';
-import { QueryToolFavDto } from './dto/query-tool-fav.dto';
+import { QueryToolSaveDto } from './dto/query-tool-save.dto';
 
 @Injectable()
-export class ToolFavService {
+export class ToolSaveService {
   constructor(
-    @InjectModel(ToolFav.name) private toolFavModel: Model<ToolFav>,
+    @InjectModel(ToolSave.name) private toolFavModel: Model<ToolSave>,
     private readonly toolService: ToolService,
   ) {}
 
-  async findAll(): Promise<ToolFav[]> {
+  async findAll(): Promise<ToolSave[]> {
     return this.toolFavModel.find().exec();
   }
 
-  async findByQuery(dto: QueryToolFavDto): Promise<ToolFav[]> {
+  async findByQuery(dto: QueryToolSaveDto): Promise<ToolSave[]> {
     return this.toolFavModel
       .find({
         ...((dto.userId && { userId: dto.userId }) || {}),
@@ -27,15 +27,15 @@ export class ToolFavService {
       .exec();
   }
 
-  async findOne(id: string): Promise<ToolFav | null> {
+  async findOne(id: string): Promise<ToolSave | null> {
     return this.toolFavModel.findOne({ _id: id }).exec();
   }
 
-  async create(createToolFavDto: CreateToolFavDto): Promise<ToolFav> {
-    const createdCat = new this.toolFavModel(createToolFavDto);
+  async create(createToolSaveDto: CreateToolSaveDto): Promise<ToolSave> {
+    const createdCat = new this.toolFavModel(createToolSaveDto);
     const toolFav = await createdCat.save();
     try {
-      await this.toolService.adjustFavs(createToolFavDto.toolId, 1);
+      await this.toolService.adjustFavs(createToolSaveDto.toolId, 1);
     } catch (e) {
       console.error(e);
     }
@@ -56,11 +56,11 @@ export class ToolFavService {
     return result.deletedCount === 1;
   }
 
-  async findUserOne(userId: string, id: string): Promise<ToolFav | null> {
+  async findUserOne(userId: string, id: string): Promise<ToolSave | null> {
     return this.toolFavModel.findOne({ _id: id, userId }).exec();
   }
 
-  async findUserAll(userId: string): Promise<ToolFav[]> {
+  async findUserAll(userId: string): Promise<ToolSave[]> {
     return this.toolFavModel.find({ userId }).exec();
   }
 
